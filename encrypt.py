@@ -14,17 +14,24 @@ def select_file():
     return file_path
 
 def encrypt_data(key, data):
-    cipher = Fernet(key)
-    encrypted_file = cipher.encrypt(data)
-    return encrypted_file
+    try:
+        cipher = Fernet(key)
+        encrypted_file = cipher.encrypt(data)
+        return encrypted_file
+    except Exception as e:
+        print(f'Error in encrytion: {e}')
+        exit()
 
 selected_file = select_file()
+while not selected_file:
+    print("No file selected, trying again")
+    selected_file = select_file()
 
 with open(selected_file, 'rb') as file:
     data_to_encrypt = file.read()
     encrypted = encrypt_data(key, data_to_encrypt)
 
-# Get the base name of the selected file
+
 file_base_name = os.path.basename(selected_file)
 
 encrypted_file_path = file_base_name + '.enc'
